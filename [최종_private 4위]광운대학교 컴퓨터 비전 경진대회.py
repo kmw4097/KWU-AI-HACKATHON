@@ -1,51 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## 광운대학교 AI 해커톤  
-# 
-# 안녕하세요 저희는 이번 광운대학교 AI 해커톤에 참가한 'n을뒤집으면u' 팀입니다.  
-# 이번 기회에 처음으로 Image data를 다루게 되어 우여곡절을 겪으며 많은 것을 배울 수 있었습니다.  
-# 이번 대회 다들 정말 고생 많으셨고, 아직 많이 부족하지만 저희 팀 코드를 공유합니다!  
-# 
-# ---------------------------------------------------------------------------  
-# 저희 팀은 Colab Pro 버전을 사용하였습니다.  
-# 전체적인 코드는 baseline과 크게 다르지 않습니다.  
-# 
-# ## 참고 자료  
-# 이전에 유사한 데이터로 진행된 대회 코드들을 참고 했습니다.  
-# [EfficientNet-b8, TTA 참고 자료](https://dacon.io/competitions/official/235697/codeshare/2429?page=1&dtype=recent)  
-# [CheckPoint 참고 자료](https://dacon.io/competitions/official/235697/codeshare/2441?page=1&dtype=recent)  
-# [Loss Function 참고 자료](https://dacon.io/competitions/official/235697/codeshare/2354?page=1&dtype=recent)  
-# [Swish activation function 참고 자료_1](https://dacon.io/competitions/official/235697/codeshare/2445?page=1&dtype=recent)  
-# [Swish activation function 참고 자료_2](https://blog.ceshine.net/post/pytorch-memory-swish/)  
-# [Augmentation 참고 자료](https://www.dacon.io/competitions/official/235697/codeshare/2437?page=2&dtype=recent)  
-# 
-# ## 사용 모델  
-# - Resnet50_v2  
-# - EfficientNet-b8  
-# 
-# 서로 다른 activation function을 사용하는 모델을 앙상블하기 위해 Resnet과 EfficientNet을 사용했습니다.  
-# EfficientNet은 무겁지만 좋은 성능을 위해 b8 모델을 사용했고, Resnet은 비교적 학습 속도가 빠르고 성능도 괜찮다고 알려진 Resnet50_v2 모델을 사용했습니다.  
-# 
-# ## 학습 방법  
-# - Resnet50_v2 (3 folds, epoch 40, batch size 32)  
-# - EfficientNet-b8 (5 folds, epoch 30, batch size 16 / 12)  
-# - Augmentation은 처음에 Flip과 Rotation을 사용했으나 Rotation만 사용했을 때 점수가 약간 더 높았습니다.  
-# - 9월 29일 이후로 본격적인 학습을 시작하게 되어 시간적 / 물리적 한계로 비교적 적은 fold와 epoch로 학습했고, EfficientNet-b8의 경우, Colab gpu 할당량을 초과하는 학습 시간이 필요해서 Check Point를 설정 했습니다.  
-# - EfficientNet-b8의 초기 학습은 batch size 16으로 진행했고, Check Point를 불러와서 학습할 때는 메모리 상의 문제로 batch size를 12로 수정하여 학습 시켰습니다.
-# - optimizer, scheduler는 baseline과 동일하고, scheduler의 경우엔 gamma를 0.9로 설정 했습니다.
-# - loss function은 MultiLabelSoftMarginLoss를 사용 했습니다.
-# - valid accuracy가 일정 횟수(코드에서는 4회)동안 증가하지 않으면 early stopping 시켰습니다.
-# - 후처리로 TTA(90~360도 회전)와 soft voting(threshold 0.4)을 했습니다.  
-# 
-# ## 특이 사항  
-# 최종 제출 코드를 재현하기 위해 알아두셔야 할 사항들 입니다.
-# - Check Point를 이용하는 경우, checkpoint 폴더를 추가 생성하셔야 문제없이 작동합니다.  
-# - Resnet50_v2 모델은 3 folds 중 fold 1, fold 2만 사용 되었습니다. (fold 0 제외)  
-# - EfficientNet-b8 모델은 5 folds 중 fold 0~3까지만 사용 되었습니다. (fold 4 제외)  
-#  
-# 최종 제출일에 학습 도중 런타임 만료가 되는 이슈가 있어서 예정과 다르게 미완성된 모델을 사용하게 되었습니다.  
-
 # In[1]:
 
 
@@ -310,12 +265,6 @@ if not os.path.exists(PATH_CP):
 #checkpoint file이 비어있는지 확인
 os.path.getsize(PATH_CP) ==0
 
-
-# ## Train  
-# 저희 팀은 장시간 코드를 돌리다가 여러 우여곡절을 겪었습니다.  
-# 대부분 이미 알고 계실테지만 혹시라도 필요하신 분들을 위해 [colab run time 유지 방법](https://www.dacon.io/forum/405904)을 첨부합니다.  
-# 
-# 
 
 # In[ ]:
 
